@@ -50,6 +50,17 @@ python launch.py --config configs/controldreamernerfstrict-sd21-shading.yaml --t
 
 See example use in `generate.sh`
 
+## Evaluation
+
+To convert output into mesh and evaluate chamfer distance + CLIP score, run
+
+```sh
+python launch.py --config outputs/controldreamernerfstrict-sd21-shading/$output/configs/parsed.yaml \
+    --export --gpu 0 \
+    system.exporter.eval=True \
+    resume=outputs/controldreamernerfstrict-sd21-shading/$output/ckpts/last.ckpt
+```
+
 ## Credits
 
 - This code is developed using [threestudio](https://github.com/threestudio-project/threestudio), [MVDream](https://github.com/bytedance/MVDream-threestudi), and [ImageDream](https://github.com/bytedance/ImageDream).
