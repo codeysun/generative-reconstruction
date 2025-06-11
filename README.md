@@ -1,8 +1,12 @@
 # Reimagine the World with 3D Generative Reconstruction
 
-[Slides](https://docs.google.com/presentation/d/1Q3ksUNysvB-zoIKSnR7MmscWLzR4cuI4X7SXcms_wRc/edit?usp=sharing) | [Paper](https://www.overleaf.com/read/zktghsywfcvp#79bc7a)
+<h3 align="center"><a href="https://docs.google.com/presentation/d/1Q3ksUNysvB-zoIKSnR7MmscWLzR4cuI4X7SXcms_wRc/edit?usp=sharing">Slides</a> | <a href="https://www.overleaf.com/read/zktghsywfcvp#79bc7a">Paper</a> </h3>
+
+![Image](https://github.com/user-attachments/assets/db4bbe6c-a840-4756-b0ee-d9e823059030)
 
 ## Instructions
+
+![Image](https://github.com/user-attachments/assets/9d98cec6-036d-4ef7-8278-c416f7a075ca)
 
 This repo is separated into two parts:
 
