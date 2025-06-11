@@ -140,24 +140,25 @@ def main(args):
 
     dataset = os.path.basename(os.path.normpath(out_dir))
     print(dataset)
-    if dataset == "partobjtiny":
-        types = "glb"
-    elif dataset == "partnet":
-        types = "obj"
-    else:
-        types = "obj"
 
     render_dir = os.path.join(out_dir, "render")
     tree_dir = os.path.join(out_dir, "tree")
     all_files = os.listdir(tree_dir)
 
+    all_meshes = os.listdir(source_dir)
+    uid_to_filename = {} # lookup dict for uid to mesh
+    for file in all_meshes:
+        uid = file.split('.')[0]  # Assuming UID is the part before the first dot in the filename
+        uid_to_filename[uid] = file
+
     print(all_files)
     for f in all_files:
         uid = f.split("_")[0]
-        # uid = f.rsplit("_", 2)[0]
 
         tree_path = os.path.join(tree_dir, f, "tree.pkl")
-        mesh_path = os.path.join(source_dir, f"{uid}.{types}")
+        mesh_path = os.path.join(source_dir, uid_to_filename[uid])
+        _, types = os.path.splitext(mesh_path)
+        types = types.lstrip('.')
 
         tree = load_tree(tree_path)
 

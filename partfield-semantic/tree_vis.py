@@ -715,7 +715,7 @@ def load_ply_to_numpy(filename):
     
     return points
 
-def solve_clustering(input_fname, uid, view_id, save_dir="test_results1", out_render_fol= "test_render_clustering", use_agglo=False, max_num_clusters=18, is_pc=False, option=1, with_knn=True, export_mesh=True):
+def solve_clustering(input_fname, uid, view_id, save_dir="test_results1", out_render_fol= "test_render_clustering", use_agglo=False, max_num_clusters=18, is_pc=False, option=1, with_knn=True, export_mesh=True, mesh_type="glb"):
     print(uid, view_id)
     
     if not is_pc:
@@ -831,7 +831,8 @@ def solve_clustering(input_fname, uid, view_id, save_dir="test_results1", out_re
         os.makedirs(out_tree_fol, exist_ok=True)
 
         # TODO: comment out if using Blender to render tree
-        parttree.generate_images_from_mesh(os.path.join(out_tree_fol, "node_images"), blender=True)
+        if mesh_type == "obj":
+            parttree.generate_images_from_mesh(os.path.join(out_tree_fol, "node_images"), blender=True)
 
         fname_parttree = os.path.join(out_tree_fol, "tree.pkl")
 
@@ -899,6 +900,7 @@ if __name__ == '__main__':
         if ".ply" in f and IS_PC and f.split(".")[0]:
             selected.append(f)
         elif (".obj" in f or ".glb" in f) and not IS_PC and f.split(".")[0]:
+            types = "glb" if ".glb" in f else ".obj"
             selected.append(f)
     
     print("Number of models to process: " + str(len(selected)))
@@ -908,4 +910,4 @@ if __name__ == '__main__':
         uid = model.split(".")[-2]
         view_id = 0
 
-        solve_clustering(fname, uid, view_id, save_dir=root, out_render_fol= OUTPUT_FOL, use_agglo=USE_AGGLO, max_num_clusters=MAX_NUM_CLUSTERS, is_pc=IS_PC, option=OPTION, with_knn=WITH_KNN, export_mesh=EXPORT_MESH)
+        solve_clustering(fname, uid, view_id, save_dir=root, out_render_fol= OUTPUT_FOL, use_agglo=USE_AGGLO, max_num_clusters=MAX_NUM_CLUSTERS, is_pc=IS_PC, option=OPTION, with_knn=WITH_KNN, export_mesh=EXPORT_MESH, mesh_type=types)

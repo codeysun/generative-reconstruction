@@ -15,7 +15,6 @@ from subprocess import call
 from tqdm import tqdm
 from tree import PartTree, save_tree, load_tree
 from openclip_utils import OpenCLIPNetwork, OpenCLIPNetworkConfig
-from eval_clip import evaluate_iou
 from tree_query_qwen import query_tree, load_model_and_processor
 from sentence_transformers import SentenceTransformer
 

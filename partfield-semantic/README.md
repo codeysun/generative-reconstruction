@@ -7,10 +7,19 @@ This repo is adapted from PartField, with added support for VLM-based semantic l
 Follow the same environment setup instructions in original README below. Then, install additional dependencies for Qwen2.5-VL:
 
 ```
+sudo apt install graphviz
+pip install graphviz
 pip install openai
 pip install git+https://github.com/huggingface/transformers
 pip install qwen-vl-utils
 pip install sentence-transformers
+pip install git+https://github.com/NVlabs/nvdiffrast.git
+pip install jaxtyping
+pip install rtree
+pip install open-clip-torch
+pip install decord
+pip install accelerate
+pip install -U flash-attn --no-build-isolation
 ```
 
 If working with `.glb` meshes with textures (e.g. Objaverse), you can install Blender for rendering
@@ -50,6 +59,12 @@ python tree_render_views.py --out_dir exp_results/clustering/objaverse --source_
 Then, perform part labeling. Note that due to restrictions with Open3D, you may need to upgrade PyTorch to 2.6.
 
 ```
+python tree_query.py --out_dir exp_results/clustering/objaverse --label_trees
+```
+
+If GT data is available, add the `--eval` flag to prep for Evaluation section
+
+```
 python tree_query.py --out_dir exp_results/clustering/objaverse --gt_path data/objaverse_samples/semantic.json --label_trees --eval
 ```
 
@@ -62,6 +77,8 @@ python mask_selection.py --out_dir exp_results/clustering/objaverse
 ```
 
 Edit lines 167-168 with the correct object ID and semantic query `label`.
+
+The output will be `.npy` and `.ply` files of the part segmentation corresponding to the query at different thresholds (top k). The `.npy` file will be an input for the 3D generation.
 
 ## Evaluation
 

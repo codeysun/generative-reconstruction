@@ -76,7 +76,7 @@ def get_semantic(model_name, out_dir, uid, labels, k=None):
     else:
         raise ValueError(f"Unknown model type: {args.model}")
 
-    preds_dir = os.path.join(out_dir, "sem_preds_cot")
+    preds_dir = os.path.join(out_dir, "sem_preds")
     submesh_dir = os.path.join(preds_dir, "ply", uid)
 
     os.makedirs(preds_dir, exist_ok=True)
@@ -85,7 +85,7 @@ def get_semantic(model_name, out_dir, uid, labels, k=None):
     torch.cuda.empty_cache()
 
     tree_dir = os.path.join(out_dir, "tree")
-    tree = load_tree(os.path.join(tree_dir, uid, "tree_labeled_cot.pkl"))
+    tree = load_tree(os.path.join(tree_dir, uid, "tree_labeled.pkl"))
 
     # Get the embeddings for each node
     with torch.no_grad():
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # TODO: Change here!
-    uid = "segment_17_chair17__0" # object ID
-    labels = ["seat", "backrest", "legs"] # Semantic queries
+    uid = "0c3ca2b32545416f8f1e6f0e87def1a6_0" # object ID
+    labels = ["bowl", "apples", "stem"] # Semantic queries
 
     stats = get_semantic(args.model, args.out_dir, uid, labels)
