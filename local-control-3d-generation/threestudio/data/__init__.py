@@ -1,1 +1,1 @@
-from . import co3d, image, multiview, uncond, uncond_eff
+from . import co3d, image, multiview, random_multiview, uncond, uncond_eff

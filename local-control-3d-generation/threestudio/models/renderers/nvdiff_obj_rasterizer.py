@@ -46,48 +46,6 @@ def normalize_mesh(mesh):
 
     return
 
-def create_bbox(bounds):
-    min_corner = bounds[0].copy()
-    max_corner = bounds[1].copy()
-
-     # Define the vertices of the cube
-    v0 = np.array(min_corner)
-    v1 = np.array([min_corner[0], min_corner[1], max_corner[2]])  # Front bottom-left
-    v2 = np.array([min_corner[0], max_corner[1], min_corner[2]])  # Back bottom-left
-    v3 = np.array([min_corner[0], max_corner[1], max_corner[2]])  # Front top-left
-    v4 = np.array([max_corner[0], min_corner[1], min_corner[2]])  # Front bottom-right
-    v5 = np.array([max_corner[0], min_corner[1], max_corner[2]])  # Back bottom-right
-    v6 = np.array([max_corner[0], max_corner[1], min_corner[2]])  # Back top-right
-    v7 = np.array(max_corner)                                        # Front top-right
-
-    # Note that nvdiffrast does not support backface culling natively
-
-    # Create an array of vertices
-    vertices = np.array([v0, v1, v2, v3, v4, v5, v6, v7])
-
-    # Define the faces of the cube
-    faces = np.array([[0, 2, 1],
-                      [2, 3, 1],
-                      [0, 5, 4],
-                      [0, 1, 5],
-                      [0, 6, 2],
-                      [4, 6, 0],
-                      [4, 6, 7],
-                      [7, 5, 4],
-                      [1, 7, 3],
-                      [1, 5, 7],
-                      [3, 7, 6],
-                      [6, 2, 3]])
-
-    # Create trimesh
-    bbox_mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
-
-    color = [255, 255, 255, 255]
-    v_colors = np.array([color] * bbox_mesh.vertices.shape[0])
-    bbox_mesh.visual.vertex_colors = v_colors
-
-    return bbox_mesh
-
 def color_mesh_by_mask(mesh, mask, default_color):
     # Create an array of colors for all faces (initially black)
     face_colors = np.zeros((len(mesh.faces), 4), dtype=np.uint8)
@@ -137,31 +95,6 @@ class NVDiffObjRasterizer(Rasterizer):
         device = get_device()
         self.ctx = NVDiffRasterizerContext(self.cfg.context_type, device)
 
-        # obj_meshes = []
-        # control_meshes = []
-        # self.seg_node_map = {}
-        # for file in os.listdir(self.cfg.file_path):
-        #     if file.endswith('.obj'):
-        #     # if file in self.cfg.masked_segments:
-        #         obj_file_path = os.path.join(self.cfg.file_path, file)
-        #         mesh = trimesh.load(obj_file_path)
-        #         if mesh.is_empty:
-        #             print(f"Failed to load OBJ file: {obj_file_path}")
-        #             continue
-        #         obj_meshes.append(mesh)
-        #
-        #         if file in self.cfg.masked_segments:
-        #             color = [255, 255, 255, 255]
-        #             control_meshes.append(mesh)
-        #         else:
-        #             c = self.cfg.default_control
-        #             color = [c, c, c, 255]
-        #         v_colors = np.array([color] * mesh.vertices.shape[0])
-        #         mesh.visual.vertex_colors = v_colors
-        #
-        # self.trimesh = trimesh.util.concatenate(obj_meshes)
-        # self.control_trimesh = trimesh.util.concatenate(control_meshes)
-
         self.trimesh = trimesh.load(self.cfg.file_path, force='mesh', process=False)
         faces = self.trimesh.faces
         masked_faces = np.load(self.cfg.masked_segments)
@@ -170,20 +103,20 @@ class NVDiffObjRasterizer(Rasterizer):
 
         # Set object pose to align with MVDream
         # opengl_to_blender = np.array([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
-        # obj_pose = np.array([
-        #     [0, 0, -1, 0],
-        #     [-1, 0, 0, 0],
-        #     [0, 1, 0, 0],
-        #     [0, 0, 0, 1]
-        # ])
-
         obj_pose = np.array([
-            [0, 0, 1, 0], 
-            [1, 0, 0, 0], 
-            [0, 1, 0, 0], 
+            [0, 0, -1, 0],
+            [-1, 0, 0, 0],
+            [0, 1, 0, 0],
             [0, 0, 0, 1]
         ])
-        # self.trimesh = self.trimesh.apply_transform(obj_pose)
+
+        # obj_pose = np.array([
+        #     [0, 0, 1, 0], 
+        #     [1, 0, 0, 0], 
+        #     [0, 1, 0, 0], 
+        #     [0, 0, 0, 1]
+        # ])
+        self.trimesh = self.trimesh.apply_transform(obj_pose)
 
         # Normalize object to be centered in [-0.5, 0.5]
         normalize_mesh(self.trimesh)
@@ -213,15 +146,6 @@ class NVDiffObjRasterizer(Rasterizer):
         )  # transform back to torch tensor on CUDA
         self.mesh = Mesh(v_pos=self.v_pos, t_pos_idx=self.t_pos_idx)
         self.f_colors = f_colors[:, :3].float() / 255.0
-
-        # Get bounding boxes
-        # bounds = self.trimesh.bounds
-        # self.bbox_trimesh = create_bbox(bounds)
-        # self.bbox_v_pos, self.bbox_t_pos_idx, self.bbox_f_nrm = (
-        #     torch.from_numpy(self.bbox_trimesh.vertices).float().to(device),
-        #     torch.from_numpy(self.bbox_trimesh.faces).long().to(device),
-        #     torch.from_numpy(self.bbox_trimesh.face_normals).float().to(device),
-        # )  # transform back to torch tensor on CUDA
 
         # Material options
         self.ambient_light_color = torch.tensor([0.1, 0.1, 0.1], dtype=torch.float32).to(device)
@@ -340,13 +264,9 @@ class NVDiffObjRasterizer(Rasterizer):
         render_rgb: bool = True,
         **kwargs
     ) -> Dict[str, Any]:
-        # out_bbox = self.render_color(self.bbox_v_pos, self.bbox_t_pos_idx, self.bbox_f_nrm, mvp_mtx, camera_positions, light_positions)
-
         out = self.render_color(self.v_pos, self.t_pos_idx, self.f_nrm, mvp_mtx, camera_positions, light_positions)
         if self.cfg.local_control:
             out.update(self.render_mask(self.v_pos, self.t_pos_idx, self.f_colors, mvp_mtx))
-
-        # out.update({"bbox_mask": out_bbox["opacity"]})
 
         return out
 

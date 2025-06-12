@@ -77,7 +77,7 @@ def get_semantic(model_name, out_dir, uid, labels, k=None):
         raise ValueError(f"Unknown model type: {args.model}")
 
     preds_dir = os.path.join(out_dir, "sem_preds")
-    submesh_dir = os.path.join(preds_dir, "ply", uid)
+    submesh_dir = os.path.join(preds_dir, uid)
 
     os.makedirs(preds_dir, exist_ok=True)
     os.makedirs(submesh_dir, exist_ok=True)
@@ -139,9 +139,9 @@ def get_semantic(model_name, out_dir, uid, labels, k=None):
                 preds[i, j, :],
             )
 
-    # Save the numpy array
-    pred_sem_path = os.path.join(preds_dir, f"{uid}.npy")
-    np.save(pred_sem_path, preds)
+    # # Save the numpy array
+    # pred_sem_path = os.path.join(preds_dir, f"{uid}.npy")
+    # np.save(pred_sem_path, preds)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,6 @@
+torch<2.6
+torchvision
+torchaudio
 lightning==2.0.0
 omegaconf==2.3.0
 jaxtyping
@@ -13,7 +16,7 @@ matplotlib
 imageio>=2.28.0
 imageio[ffmpeg]
 git+https://github.com/NVlabs/nvdiffrast.git
-libigl
+libigl<2.6
 xatlas
 trimesh[easy]
 networkx
@@ -42,6 +45,3 @@ git+https://github.com/openai/CLIP.git
 
 #controlnet
 controlnet_aux
-
-# 3dgs
-plyfile

@@ -3,8 +3,7 @@ tag: "${rmspace:${system.prompt_processor.prompt},_}"
 exp_root_dir: "outputs"
 seed: 0
 
-# data_type: "random-multiview-camera-datamodule"
-data_type: "mvdream-random-multiview-camera-datamodule"
+data_type: "random-multiview-camera-datamodule"
 data:
   batch_size: [8,4] # must be dividable by n_view
   n_view: 4
@@ -28,20 +27,6 @@ system:
   control_renderer:
     file_path: ???
     masked_segments: ???
-    # Mesh
-    # file_path: "/home/codeysun/git/data/PartObjaverse-Tiny/PartObjaverse-Tiny_mesh/00aee5c2fef743d69421bb642d446a5b.glb"
-    # file_path: "/home/codeysun/git/PartField/data/partnet/mesh/25256.obj"
-    # semantic face predictions
-    # masked_segments: "/home/codeysun/git/PartField/exp_results/clustering/partobjtiny/sem_preds/00aee5c2fef743d69421bb642d446a5b/Basket.npy"
-    # masked_segments: "/home/codeysun/git/PartField/exp_results/clustering/partnet/sem_preds/25256/Tabletop.npy"
-
-    # old
-    # file_path: "/home/codeysun/git/data/PartNet/data_v0/8677/objs"
-    # masked_segments: ["original-3.obj"]
-    # file_path: "/home/codeysun/git/data/PartNet/data_v0/14102/objs"
-    # masked_segments: ["new-0.obj", "new-1.obj"]
-    # file_path: "/home/codeysun/git/data/PartNet/data_v0/555/objs"
-    # masked_segments: ["new-4.obj", "new-0.obj","new-1.obj","new-2.obj","new-3.obj",]
     default_control: 0
     local_control: True
 
@@ -75,7 +60,7 @@ system:
     soft_shading: true
     albedo_activation: sigmoid
 
-  background_type: "mvdream-neural-environment-map-background"
+  background_type: "neural-environment-map-background"
   background:
     color_activation: sigmoid
     random_aug: true

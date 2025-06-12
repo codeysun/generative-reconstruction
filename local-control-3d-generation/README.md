@@ -41,9 +41,9 @@ Then, feed the source mesh + semantic part segment output as:
 
 ```sh
 python launch.py --config configs/controldreamernerfstrict-sd21-shading.yaml --train --gpu 0 \
-    system.prompt_processor.prompt="$prompt" \
-    system.control_renderer.file_path="$file_path" \
-    system.control_renderer.masked_segments="$masked_segment" \
+    system.prompt_processor.prompt="[PROMPT]" \
+    system.control_renderer.file_path="[SOURCE_MESH]" \
+    system.control_renderer.masked_segments="[PART_SEGMENTATION_NPY]" \
     system.control_renderer.local_control=True \
     system.guidance.control_scale=2.0
 ```
@@ -55,10 +55,10 @@ See example use in `generate.sh`
 To convert output into mesh and evaluate chamfer distance + CLIP score, run
 
 ```sh
-python launch.py --config outputs/controldreamernerfstrict-sd21-shading/$output/configs/parsed.yaml \
+python launch.py --config outputs/controldreamernerfstrict-sd21-shading/[OUTPUT]/configs/parsed.yaml \
     --export --gpu 0 \
     system.exporter.eval=True \
-    resume=outputs/controldreamernerfstrict-sd21-shading/$output/ckpts/last.ckpt
+    resume=outputs/controldreamernerfstrict-sd21-shading/[OUTPUT]/ckpts/last.ckpt
 ```
 
 ## Credits
