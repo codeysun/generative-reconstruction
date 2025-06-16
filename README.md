@@ -20,3 +20,10 @@ Follow setup and running instructions in each directory
 
 Given arbitrary object meshes, one can reimagine them by first running part segmentation and then running generation.
 Below is an example on a ScanNet++ scene, imported into Unity
+
+
+
+
+https://github.com/user-attachments/assets/eea1c8bb-02f2-48a0-a53c-71ebd423824e
+
+
